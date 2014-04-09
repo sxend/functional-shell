@@ -1,0 +1,19 @@
+{
+  "name": "functional-shell",
+  "version": "0.0.0",
+  "description": "The functional shell-script exec module",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodeunit test/index.js"
+  },
+  "keywords": [
+    "shell",
+    "execute",
+    "function"
+  ],
+  "author": "sxend",
+  "license": "MIT",
+  "devDependencies": {
+    "nodeunit": "~0.8.6"
+  }
+}
