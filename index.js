@@ -11,14 +11,18 @@ var FunctionalShell = function(shFunction, args) {
         }
     };
 
-    var parsedScript = FunctionalShell.parse(shFunction);
-    if (!parsedScript) {
-        result.on = function(ev, callback) {
+    function errorOnlyResult(r) {
+        r.on = function(ev, callback) {
             if (ev == 'error') {
                 callback(new Error('invalid shFunc'));
             }
         };
-        return result;
+        return r;
+    };
+
+    var parsedScript = FunctionalShell.parse(shFunction);
+    if (!parsedScript) {
+        return errorOnlyResult(result);
     }
     var tmpDirName = __dirname + "/tmp";
     var tmpShName = tmpDirName + "/" + Date.now() + ".sh";
@@ -59,7 +63,6 @@ var FunctionalShell = function(shFunction, args) {
                 }
             });
 
-
             process.on('close', function(data) {
                 fs.unlink(tmpShName, function(err) {
                     errorReport(err);
@@ -75,11 +78,15 @@ var FunctionalShell = function(shFunction, args) {
 
     return result;
 };
+var REGEXS = {
+    COMMENT_REGEX: /\/\*([.\n\s\S]*)\*\//,
+    FRONT_SPACE_REGEX: /\n\s*/g
+}
 
 FunctionalShell.parse = function parse(shFunction) {
-    var match = shFunction.toString().match(/\/\*([.\n\s\S]*)\*\//);
+    var match = shFunction.toString().match(REGEXS.COMMENT_REGEX);
     if (match) {
-        return match[1].replace(/\n\s*/g, '\n').trim();
+        return match[1].replace(REGEXS.FRONT_SPACE_REGEX, '\n').trim();
     }
     return null;
 }
