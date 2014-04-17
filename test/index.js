@@ -132,6 +132,28 @@ module.exports = {
             test.equal(tmp.toString(), EMPTY_DIR_STRING, 'tmp dirは空にする');
             test.done();
         });
+    },
+    testStringEchoSh: function(test) {
+        var process = sh("echo $1", ["hello"]);
+        process.on('stdout', function(data) {
+            if (data) {
+                test.equal(data.toString(), 'hello\n', "文字列とechoによる改行付きのバッファー");
+            } else {
+                test.fail("出力が返ってこなかった");
+            }
+        });
+        process.on('stderr', function(data) {
+            test.fail("エラーは起きません");
+        });
+        process.on('error', function(err) {
+            test.fail("エラーは起きません");
+        });
+        process.on('close', function(data) {
+            test.equal(data, 0, "終了ステータス");
+            var tmp = fs.readdirSync('./tmp');
+            test.equal(tmp.toString(), EMPTY_DIR_STRING, 'tmp dirは空にする');
+            test.done();
+        });
     }
 
 }

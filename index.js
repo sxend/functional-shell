@@ -1,6 +1,6 @@
 var spawn = require('child_process').spawn,
     fs = require('fs');
-var FunctionalShell = function(shFunction, args) {
+var FunctionalShell = function(sh, args) {
     args = [].concat(args);
     var events = {};
     var result = {
@@ -20,7 +20,7 @@ var FunctionalShell = function(shFunction, args) {
         return r;
     };
 
-    var parsedScript = FunctionalShell.parse(shFunction);
+    var parsedScript = (typeof sh === 'function') ? FunctionalShell.parse(sh): sh;
     if (!parsedScript) {
         return errorOnlyResult(result);
     }
