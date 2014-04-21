@@ -35,7 +35,7 @@ var FunctionalShell = function(sh, args) {
             events.error(err);
         }
     }
-    fs.lstat('./tmp', function(err, stats) {
+    fs.lstat(__dirname + '/tmp', function(err, stats) {
         if (err) {
             errorReport(err);
             return;
